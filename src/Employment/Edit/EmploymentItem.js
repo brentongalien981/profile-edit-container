@@ -2,11 +2,24 @@ import React from "react";
 import EmploymentItemDescription from "./EmploymentItemDescription";
 
 function EmploymentItem(props) {
-    let startDate = new Date(props.employment.start_date);
-    startDate = startDate.toISOString().substr(0, 10);
+    // Set dates.
+    let startDate = "2000-01-01";
+    try {
+        startDate = new Date(props.employment.start_date);
+        startDate = startDate.toISOString().substr(0, 10);
+    } catch (error) {
+        console.log("\n\nerror ===> " + error);
+        startDate = "2000-01-01";
+    }
 
-    let endDate = new Date(props.employment.end_date);
-    endDate = endDate.toISOString().substr(0, 10);
+    let endDate = "2000-01-01";
+    try {
+        endDate = new Date(props.employment.end_date);
+        endDate = endDate.toISOString().substr(0, 10);
+    } catch (error) {
+        console.log("\n\nerror ===> " + error);
+        endDate = "2000-01-01";
+    }
 
     const descriptions = props.employment.descriptions.map(description => {
         return <EmploymentItemDescription key={description.id} description={description.description} changed={() => {}} />;
@@ -18,7 +31,13 @@ function EmploymentItem(props) {
                 <label className="col-sm-2 col-form-label">Company</label>
 
                 <div className="col-sm-10">
-                    <input type="text" name="employer" className="form-control" value={props.employment.employer ? props.employment.employer : ""} onChange={props.changed} />
+                    <input
+                        type="text"
+                        name="employer"
+                        className="form-control"
+                        value={props.employment.employer ? props.employment.employer : ""}
+                        onChange={event => props.changed(event, props.index, props.employment.id)}
+                    />
                 </div>
             </div>
 
@@ -26,7 +45,13 @@ function EmploymentItem(props) {
                 <label className="col-sm-2 col-form-label">Position</label>
 
                 <div className="col-sm-10">
-                    <input type="text" name="position" className="form-control" value={props.employment.position ? props.employment.position : ""} onChange={props.changed} />
+                    <input
+                        type="text"
+                        name="position"
+                        className="form-control"
+                        value={props.employment.position ? props.employment.position : ""}
+                        onChange={event => props.changed(event, props.index, props.employment.id)}
+                    />
                 </div>
             </div>
 
@@ -34,7 +59,7 @@ function EmploymentItem(props) {
                 <label className="col-sm-2 col-form-label">Start Date</label>
 
                 <div className="col-sm-10">
-                    <input type="date" name="start_date" className="form-control" value={startDate ? startDate : ""} onChange={props.changed} />
+                    <input type="date" name="start_date" className="form-control" value={startDate ? startDate : ""} onChange={event => props.changed(event, props.index, props.employment.id)} />
                 </div>
             </div>
 
@@ -42,7 +67,7 @@ function EmploymentItem(props) {
                 <label className="col-sm-2 col-form-label">End Date</label>
 
                 <div className="col-sm-10">
-                    <input type="date" name="end_date" className="form-control" value={endDate ? endDate : ""} onChange={props.changed} />
+                    <input type="date" name="end_date" className="form-control" value={endDate ? endDate : ""} onChange={event => props.changed(event, props.index, props.employment.id)} />
                 </div>
             </div>
 

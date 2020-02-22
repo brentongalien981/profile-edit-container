@@ -39,7 +39,6 @@ class ProfileEditContainer extends React.Component {
         let employments = this.state.employments;
 
         for (let i = 0; i < employments.length; i++) {
-
             const employment = employments[i];
 
             if (employment.id == employmentId) {
@@ -87,12 +86,40 @@ class ProfileEditContainer extends React.Component {
         const oldProfile = this.state.profile;
         const newProfile = { ...oldProfile, [name]: value };
 
+        // for user-info
         this.setState({
             profile: newProfile
         });
+
+        // for socialLinks
+        switch (name) {
+            case "facebook":
+            case "instagram":
+            case "twitter":
+                let updatedSocialLinks = this.state.socialLinks;
+                updatedSocialLinks[name].username = value;
+
+                this.setState({ socialLinks: updatedSocialLinks });
+                break;
+        }
     }
 
-    handleEmploymentChanged() {}
+    handleEmploymentChanged(event, index, employmentId) {
+        console.log("\nemploymentId ==> " + employmentId);
+        console.log("\nindex ==> " + index);
+
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+
+        let updatedEmployments = this.state.employments;
+        updatedEmployments[index][name] = value;
+        
+        //
+        this.setState({
+            employments: updatedEmployments
+        });
+    }
 
     fillComponent(data) {
         // combine

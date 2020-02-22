@@ -3,8 +3,8 @@ import $ from "jquery";
 import EmploymentItem from "./EmploymentItem";
 
 function EmploymentEdit(props) {
-    const employments = props.employments.map(employment => {
-        return <EmploymentItem key={employment.id} employment={employment} changed={props.changed} addEmploymentDescriptionClicked={props.addEmploymentDescriptionClicked} />;
+    const employments = props.employments.map((employment, index) => {
+        return <EmploymentItem key={employment.id} index={index} employment={employment} changed={props.changed} addEmploymentDescriptionClicked={props.addEmploymentDescriptionClicked} />;
     });
 
     return (
