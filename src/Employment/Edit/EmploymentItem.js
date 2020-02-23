@@ -21,8 +21,8 @@ function EmploymentItem(props) {
         endDate = "2000-01-01";
     }
 
-    const descriptions = props.employment.descriptions.map(description => {
-        return <EmploymentItemDescription key={description.id} description={description.description} changed={() => {}} />;
+    const descriptions = props.employment.descriptions.map((description, index) => {
+        return <EmploymentItemDescription key={description.id} index={index} employmentIndex={props.index} description={description.description} />;
     });
 
     return (

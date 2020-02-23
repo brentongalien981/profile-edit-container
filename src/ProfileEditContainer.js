@@ -4,10 +4,13 @@ import Options from "./Options";
 import UserInfoEdit from "./UserInfoEdit";
 import EmploymentEdit from "./Employment/Edit/EmploymentEdit";
 import axios from "axios";
+import EmploymentContext from "./context/EmploymentContext";
 
 class ProfileEditContainer extends React.Component {
     // token
     // x40lXKPnFndNNuQqOjRIIi97zCIPl3UGQlER0Cvh2MdN13ISF62pJQrtrK6Kgmno9fUuf3eC9ZQJlKob
+
+    static contextType = EmploymentContext;
 
     constructor(props) {
         super(props);
@@ -30,6 +33,27 @@ class ProfileEditContainer extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleEmploymentChanged = this.handleEmploymentChanged.bind(this);
         this.handleAddEmploymentDescriptionClicked = this.handleAddEmploymentDescriptionClicked.bind(this);
+
+        this.handleEmploymentDescriptionChanged = this.handleEmploymentDescriptionChanged.bind(this);
+    }
+
+    setMyContext() {
+        this.context.employmentDescriptionChanged = this.handleEmploymentDescriptionChanged;
+    }
+
+    handleEmploymentDescriptionChanged(event, employmentIndex, descriptionIndex) {
+        console.log("\nmethod:: handleEmploymentDescriptionChanged()");
+        console.log("employmentIndex:: " + employmentIndex);
+        console.log("descriptionIndex:: " + descriptionIndex);
+
+        const value = event.target.value;
+
+        let updatedEmployments = this.state.employments;
+        updatedEmployments[employmentIndex].descriptions[descriptionIndex].description = value;
+
+        this.setState({
+            employments: updatedEmployments
+        });
     }
 
     handleAddEmploymentDescriptionClicked(employmentId) {
@@ -114,7 +138,7 @@ class ProfileEditContainer extends React.Component {
 
         let updatedEmployments = this.state.employments;
         updatedEmployments[index][name] = value;
-        
+
         //
         this.setState({
             employments: updatedEmployments
@@ -211,6 +235,9 @@ class ProfileEditContainer extends React.Component {
     }
 
     componentDidMount() {
+        this.setMyContext();
+
+
         let token = "x40lXKPnFndNNuQqOjRIIi97zCIPl3UGQlER0Cvh2MdN13ISF62pJQrtrK6Kgmno9fUuf3eC9ZQJlKob";
         let url = "http://myg.test:8000/api/user?api_token=" + token;
         // let url = "http://myg.test:8000/api/fucker?api_token=" + token;
