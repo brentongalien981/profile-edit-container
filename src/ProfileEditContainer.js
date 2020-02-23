@@ -33,8 +33,35 @@ class ProfileEditContainer extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleEmploymentChanged = this.handleEmploymentChanged.bind(this);
         this.handleAddEmploymentDescriptionClicked = this.handleAddEmploymentDescriptionClicked.bind(this);
-
+        this.handleAddEmploymentItemClicked = this.handleAddEmploymentItemClicked.bind(this);
         this.handleEmploymentDescriptionChanged = this.handleEmploymentDescriptionChanged.bind(this);
+    }
+
+    handleAddEmploymentItemClicked() {
+        console.log("\nmethod:: handleAddEmploymentItemClicked()");
+
+        const randomId = "E-" + Math.floor(Math.random() * 1000) + 1;
+        let aDate = new Date();
+        aDate = aDate.toISOString().substr(0, 10);
+
+        let newEmployment = {
+            id: randomId,
+            user_id: 0,
+            employer: "",
+            position: "",
+            start_date: aDate,
+            end_date: aDate,
+            descriptions: [
+                {
+                    id: 0,
+                    description: ""
+                }
+            ]
+        };
+
+        let updatedEmployments = [newEmployment, ...this.state.employments];
+
+        this.setState({ employments: updatedEmployments });
     }
 
     setMyContext() {
@@ -218,6 +245,7 @@ class ProfileEditContainer extends React.Component {
                                 <EmploymentEdit
                                     employments={this.state.employments}
                                     changed={this.handleEmploymentChanged}
+                                    addEmploymentItemClicked={this.handleAddEmploymentItemClicked}
                                     addEmploymentDescriptionClicked={this.handleAddEmploymentDescriptionClicked}
                                 />
                             </div>
@@ -236,7 +264,6 @@ class ProfileEditContainer extends React.Component {
 
     componentDidMount() {
         this.setMyContext();
-
 
         let token = "x40lXKPnFndNNuQqOjRIIi97zCIPl3UGQlER0Cvh2MdN13ISF62pJQrtrK6Kgmno9fUuf3eC9ZQJlKob";
         let url = "http://myg.test:8000/api/user?api_token=" + token;

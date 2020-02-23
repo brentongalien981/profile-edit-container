@@ -9,6 +9,11 @@ function EmploymentEdit(props) {
 
     return (
         <div>
+            <div>
+                <button type="button" className="btn btn-success" onClick={props.addEmploymentItemClicked}>
+                    <i className="fa fa-plus-square"></i> Add Employment
+                </button>
+            </div>
             {employments}
 
             <div className="row">
