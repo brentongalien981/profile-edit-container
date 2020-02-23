@@ -26,7 +26,9 @@ class ProfileEditContainer extends React.Component {
                 snapchat: {},
                 tiktok: {}
             },
-            employments: []
+            employments: [],
+            isUserInfoUpdating: false,
+            userInfoErrors: []
         };
 
         this.fillComponent = this.fillComponent.bind(this);
@@ -35,6 +37,79 @@ class ProfileEditContainer extends React.Component {
         this.handleAddEmploymentDescriptionClicked = this.handleAddEmploymentDescriptionClicked.bind(this);
         this.handleAddEmploymentItemClicked = this.handleAddEmploymentItemClicked.bind(this);
         this.handleEmploymentDescriptionChanged = this.handleEmploymentDescriptionChanged.bind(this);
+        this.handleUserInfoSaved = this.handleUserInfoSaved.bind(this);
+    }
+
+    handleUserInfoSaved() {
+        if (this.state.isUserInfoUpdating) {
+            console.log("\nuserInfo is still updating");
+            return;
+        }
+        console.log("\nmethod:: handleUserInfoSaved()");
+
+        this.setState((prevState, props) => {
+            return { isUserInfoUpdating: true };
+        });
+        console.log("this.state.isUserInfoUpdating now set ==> " + this.state.isUserInfoUpdating);
+
+        let self = this;
+        let token = "x40lXKPnFndNNuQqOjRIIi97zCIPl3UGQlER0Cvh2MdN13ISF62pJQrtrK6Kgmno9fUuf3eC9ZQJlKob";
+        // let url = "http://myg.test:8000/api/profile/update";
+        let url = "http://myg.test:8000/api/profile/updateUserInfo?api_token=" + token;
+
+        axios
+            .post(url, {
+                firstName: "Fred",
+                lastName: "Flintstone",
+                ...this.state.profile,
+                person: {
+                    age: 5,
+                    name: "KobeBryant",
+                    hobbies: ["basketball", "soccer", "writing"],
+                    friends: [
+                        {
+                            name: "Kawhi"
+                        },
+                        {
+                            name: "KG"
+                        },
+                        {
+                            name: "Melo"
+                        },
+                        {
+                            name: "LeBron"
+                        }
+                    ]
+                }
+            })
+            .then(function(response) {
+                console.log(response);
+                console.log("\n\n\nlooping through object:: response...");
+                for (const property in response) {
+                    console.log(`${property}: ${response[property]}`);
+                }
+            })
+            .catch(function(error) {
+                console.log(error);
+                console.log("\n\n\nlooping through object:: error...");
+                for (const property in error) {
+                    console.log(`${property}: ${error[property]}`);
+                }
+                console.log(error.response);
+                console.log(error.response.data.message);
+                console.log(error.response.data.errors);
+
+                self.setState({ userInfoErrors: error.response.data.errors });
+            })
+            .then(function() {
+                // always executed
+                console.log("\nalways executed");
+                // self.setState({ isUserInfoUpdating: false });
+                self.setState((prevState, props) => {
+                    return { isUserInfoUpdating: false };
+                });
+                console.log("this.state.isUserInfoUpdating now reset ==> " + self.state.isUserInfoUpdating);
+            });
     }
 
     handleAddEmploymentItemClicked() {
@@ -239,7 +314,7 @@ class ProfileEditContainer extends React.Component {
                     <div className="col-8 bg-warning">
                         <div className="tab-content" id="profileDetailsHolder">
                             <div className="tab-pane active" id="userInfoEdit" role="tabpanel">
-                                <UserInfoEdit profile={this.state.profile} socialLinks={this.state.socialLinks} changed={this.handleChange} />
+                                <UserInfoEdit profile={this.state.profile} socialLinks={this.state.socialLinks} changed={this.handleChange} userInfoSaved={this.handleUserInfoSaved} errors={this.state.userInfoErrors} />
                             </div>
                             <div className="tab-pane" id="employmentEdit" role="tabpanel">
                                 <EmploymentEdit

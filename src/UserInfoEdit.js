@@ -1,6 +1,42 @@
 import React from "react";
 
 function UserInfoEdit(props) {
+
+    let formErrors = [];
+
+    for (const field in props.errors) {
+        const fieldErrors = props.errors[field];
+        console.log("\n\nfield ==> " + field);
+        // console.log("\fieldErrors ==> " + fieldErrors);
+
+        for (const fieldError of fieldErrors) {
+            console.log("fieldError ==> " + fieldError);
+        }
+
+        let errorItems = fieldErrors.map((fieldError) => {
+            return <p>{fieldError}</p>
+        });
+
+        let fieldErrorComponent = (
+            <div className="alert alert-danger">
+                <label>{field}</label>
+                {errorItems}
+            </div>
+        );
+
+        formErrors.push(fieldErrorComponent);
+    }
+
+    let formErrorsHolder = null;
+    if (formErrors.length > 0) {
+        formErrorsHolder = (
+            <div className="alert alert-danger" role="alert">
+                <h4 className="alert-heading">Well done!</h4>
+                {[...formErrors]}
+            </div>
+        );
+    }
+
     return (
         <form>
             <div className="form-group row">
@@ -63,9 +99,11 @@ function UserInfoEdit(props) {
                 </div>
             </div>
 
+            {formErrorsHolder}
+
             <div className="form-group row">
                 <div className="col-sm-10">
-                    <button type="button" className="btn btn-primary">
+                    <button type="button" className="btn btn-primary" onClick={props.userInfoSaved}>
                         Save
                     </button>
                 </div>
