@@ -5,3 +5,7 @@
 #profileDetailsHolder {
     /* border: 1px solid black; */
 }
+
+.invalid-feedback, .valid-feedback {
+    display: block;
+}

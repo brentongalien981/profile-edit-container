@@ -1,8 +1,32 @@
 import React from "react";
 
+function getProfilePhotoInput(props) {
+    //
+    let profilePhotoInput = {
+        classNames: ["custom-file-input"],
+        statusFeedback: null
+    };
+
+    const profilePhotoErrors = props.profilePhotoErrors;
+    
+    for (const field in profilePhotoErrors) {
+        profilePhotoInput.statusFeedback = <div className="invalid-feedback">{profilePhotoErrors[field][0]}</div>;
+
+        profilePhotoInput.classNames.push("is-invalid");
+        break;
+    }
+    
+    return profilePhotoInput;
+}
+
 function UserInfoEdit(props) {
+    //
+    const profilePhotoInput = getProfilePhotoInput(props);
 
     let formErrors = [];
+
+    //
+    let counter = 0;
 
     for (const field in props.errors) {
         const fieldErrors = props.errors[field];
@@ -13,18 +37,19 @@ function UserInfoEdit(props) {
             console.log("fieldError ==> " + fieldError);
         }
 
-        let errorItems = fieldErrors.map((fieldError) => {
-            return <p>{fieldError}</p>
+        let errorItems = fieldErrors.map((fieldError, index) => {
+            return <p key={index}>{fieldError}</p>;
         });
 
         let fieldErrorComponent = (
-            <div className="alert alert-danger">
+            <div key={counter} className="alert alert-danger">
                 <label>{field}</label>
                 {errorItems}
             </div>
         );
 
         formErrors.push(fieldErrorComponent);
+        ++counter;
     }
 
     let formErrorsHolder = null;
@@ -43,10 +68,18 @@ function UserInfoEdit(props) {
                 <label className="col-sm-2 col-form-label">Photo</label>
 
                 <div className="col-sm-10">
-                    <img src="" alt="profile-photo" />
+                    <img src={props.photoUrl} alt="profile-photo" width="200px" />
                     <div className="custom-file">
-                        <input type="file" className="custom-file-input" id="customFile" />
+                        <input
+                            type="file"
+                            className={profilePhotoInput.classNames.join(" ")}
+                            id="profilePhoto"
+                            name="profilePhoto"
+                            accept="image/png, image/jpeg"
+                            onChange={props.profilePhotoChanged}
+                        />
                         <label className="custom-file-label">Upload Photo</label>
+                        {profilePhotoInput.statusFeedback}
                     </div>
                 </div>
             </div>
@@ -55,7 +88,7 @@ function UserInfoEdit(props) {
                 <label className="col-sm-2 col-form-label">Username</label>
 
                 <div className="col-sm-10">
-                    <input type="text" name="username" className="form-control" value={props.profile.username ? props.profile.username : ""} onChange={props.changed} />
+                    <input type="text" name="username" className="form-control is-valid" value={props.profile.username ? props.profile.username : ""} onChange={props.changed} />
                 </div>
             </div>
 

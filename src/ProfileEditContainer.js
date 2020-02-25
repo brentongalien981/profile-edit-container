@@ -15,6 +15,7 @@ class ProfileEditContainer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            photoUrl: "",
             name: "",
             email: "",
             profile: {},
@@ -28,8 +29,10 @@ class ProfileEditContainer extends React.Component {
             },
             employments: [],
             isUserInfoUpdating: false,
-            userInfoErrors: []
+            userInfoErrors: [],
+            profilePhotoErrors: []
         };
+        this.appUrl = "http://myg.test:8000";
 
         this.fillComponent = this.fillComponent.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -38,6 +41,73 @@ class ProfileEditContainer extends React.Component {
         this.handleAddEmploymentItemClicked = this.handleAddEmploymentItemClicked.bind(this);
         this.handleEmploymentDescriptionChanged = this.handleEmploymentDescriptionChanged.bind(this);
         this.handleUserInfoSaved = this.handleUserInfoSaved.bind(this);
+        this.handleProfilePhotoChanged = this.handleProfilePhotoChanged.bind(this);
+        // this.handleProfilePhotoSaved = this.handleProfilePhotoSaved.bind(this);
+    }
+
+    handleProfilePhotoChanged() {
+        const self = this;
+
+        let token = "x40lXKPnFndNNuQqOjRIIi97zCIPl3UGQlER0Cvh2MdN13ISF62pJQrtrK6Kgmno9fUuf3eC9ZQJlKob";
+        let url = "http://myg.test:8000/api/profile/uploadPhoto?api_token=" + token;
+        // let url = "http://myg.test:8000/api/profile-photo";
+
+        var formData = new FormData();
+        var imagefile = document.querySelector("#profilePhoto");
+        formData.append("profilePhoto", imagefile.files[0]);
+        axios
+            .post(url, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            })
+            .then(function(response) {
+                console.log(response);
+                console.log("\n\n\nlooping through object:: response...");
+                for (const property in response) {
+                    console.log(`${property}: ${response[property]}`);
+                }
+
+                try {
+                    const photoUrl = response.data.url;
+                    // self.setState({ photoUrl: photoUrl });
+                    let newProfile = self.state.profile;
+                    newProfile.photo_url = photoUrl;
+
+                    self.setState({
+                        profile: newProfile,
+                        profilePhotoErrors: []
+                    });
+                } catch (e) {
+                    console.log("error bruh ==> " + e);
+                }
+            })
+            .catch(function(error) {
+                console.log(error);
+                console.log("\n\n\nlooping through object:: error...");
+                for (const property in error) {
+                    console.log(`${property}: ${error[property]}`);
+                }
+
+                try {
+                    console.log(error.response);
+                } catch (e) {
+                    console.log("error bruh ==> " + e);
+                }
+                try {
+                    console.log(error.response.data.message);
+                } catch (e) {
+                    console.log("error bruh ==> " + e);
+                }
+                try {
+                    console.log(error.response.data.errors);
+                    self.setState({
+                        profilePhotoErrors: error.response.data.errors
+                    });
+                } catch (e) {
+                    console.log("error bruh ==> " + e);
+                }
+            });
     }
 
     handleUserInfoSaved() {
@@ -62,31 +132,17 @@ class ProfileEditContainer extends React.Component {
                 firstName: "Fred",
                 lastName: "Flintstone",
                 ...this.state.profile,
-                person: {
-                    age: 5,
-                    name: "KobeBryant",
-                    hobbies: ["basketball", "soccer", "writing"],
-                    friends: [
-                        {
-                            name: "Kawhi"
-                        },
-                        {
-                            name: "KG"
-                        },
-                        {
-                            name: "Melo"
-                        },
-                        {
-                            name: "LeBron"
-                        }
-                    ]
-                }
+                ...this.state.socialLinks
             })
             .then(function(response) {
                 console.log(response);
                 console.log("\n\n\nlooping through object:: response...");
                 for (const property in response) {
                     console.log(`${property}: ${response[property]}`);
+                }
+
+                if (response.data.result === 1) {
+                    self.setState({ userInfoErrors: [] });
                 }
             })
             .catch(function(error) {
@@ -263,6 +319,7 @@ class ProfileEditContainer extends React.Component {
             actualSocialLinks[companyName] = {
                 id: socialLink.id,
                 userId: socialLink.user_id,
+                socialLinkTypeId: linkType.id,
                 username: socialLink.username,
                 website: linkType.website
             };
@@ -314,7 +371,16 @@ class ProfileEditContainer extends React.Component {
                     <div className="col-8 bg-warning">
                         <div className="tab-content" id="profileDetailsHolder">
                             <div className="tab-pane active" id="userInfoEdit" role="tabpanel">
-                                <UserInfoEdit profile={this.state.profile} socialLinks={this.state.socialLinks} changed={this.handleChange} userInfoSaved={this.handleUserInfoSaved} errors={this.state.userInfoErrors} />
+                                <UserInfoEdit
+                                    photoUrl={this.appUrl + this.state.profile.photo_url}
+                                    profile={this.state.profile}
+                                    profilePhotoErrors={this.state.profilePhotoErrors}
+                                    socialLinks={this.state.socialLinks}
+                                    changed={this.handleChange}
+                                    userInfoSaved={this.handleUserInfoSaved}
+                                    errors={this.state.userInfoErrors}
+                                    profilePhotoChanged={this.handleProfilePhotoChanged}
+                                />
                             </div>
                             <div className="tab-pane" id="employmentEdit" role="tabpanel">
                                 <EmploymentEdit
