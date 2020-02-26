@@ -32,7 +32,7 @@ class ProfileEditContainer extends React.Component {
             employments: [],
             isUserInfoUpdating: false,
             isEmploymentUpdating: false,
-            userInfoErrors: [],
+            userInfoErrors: {},
             employmentErrors: [],
             profilePhotoErrors: []
         };
@@ -126,7 +126,7 @@ class ProfileEditContainer extends React.Component {
                 self.displayObjects(response.data.validatedData, "response.data.validatedData");
 
                 if (response.data.result === 1) {
-                    self.setState({ employmentErrors: [] });
+                    self.setState({ employmentErrors: {} });
                 }
             })
             .catch(function (error) {

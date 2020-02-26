@@ -1,5 +1,107 @@
 import React from "react";
 
+
+
+function getArrangedErrors(errors) {
+
+    // 'user_id' <== normalField
+    // 'facebook.username'
+    //      facebook <== normalField
+    //          username <== socialLinkField
+
+    let arrangedErrors = {};
+
+    for (const key in errors) {
+        const fieldErrors = errors[key];
+
+        // 1) key is like 
+        const splittedKey = key.split('.');
+        const normalField = splittedKey[0];
+
+        // 
+        if (splittedKey.length > 1) {
+
+            // socialLinks errors
+            const socialLinklField = splittedKey[1];
+
+            if (arrangedErrors[normalField] == null) { arrangedErrors[normalField] = {}; }
+            arrangedErrors[normalField][socialLinklField] = fieldErrors[0];
+        }
+        else {
+            // normal errors
+            arrangedErrors[normalField] = fieldErrors[0];
+        }
+
+    }
+
+    //
+    return arrangedErrors;
+}
+
+
+
+function getClassNames(arrangedErrors, field) {
+    let classNames = ["form-control"];
+
+    try {
+
+        let errorMsg = "";
+
+        switch (field) {
+            case "facebook":
+            case "instagram":
+            case "twitter":
+                for (const key in arrangedErrors[field]) {
+                    errorMsg = arrangedErrors[field][key];
+                }
+                break;
+            default:
+                errorMsg = arrangedErrors[field];
+                break;
+        }
+
+        if (errorMsg.length > 0) { classNames.push("is-invalid"); }
+    } catch (error) {
+        console.log("\nerror bruh ==> " + error);
+    }
+
+    return classNames.join(' ');
+
+}
+
+
+
+function showFeedback(errors, field) {
+    let feedback = null;
+
+    try {
+
+        switch (field) {
+            case "facebook":
+            case "instagram":
+            case "twitter":
+                for (const key in errors[field]) {
+                    const firstErrorMsg = errors[field][key];
+                    feedback = <div className="invalid-feedback">{firstErrorMsg}</div>;
+                    break;
+                }
+
+                break;
+
+            default:
+                feedback = <div className="invalid-feedback">{errors[field]}</div>;
+                break;
+        }
+    } catch (error) {
+        console.log("\nerror bruh ==> " + error);
+    }
+
+    return feedback;
+
+}
+
+
+
 function getProfilePhotoInput(props) {
     //
     let profilePhotoInput = {
@@ -8,14 +110,14 @@ function getProfilePhotoInput(props) {
     };
 
     const profilePhotoErrors = props.profilePhotoErrors;
-    
+
     for (const field in profilePhotoErrors) {
         profilePhotoInput.statusFeedback = <div className="invalid-feedback">{profilePhotoErrors[field][0]}</div>;
 
         profilePhotoInput.classNames.push("is-invalid");
         break;
     }
-    
+
     return profilePhotoInput;
 }
 
@@ -62,6 +164,12 @@ function UserInfoEdit(props) {
         );
     }
 
+
+    //
+    let arrangedErrors = getArrangedErrors(props.errors);
+
+
+    //
     return (
         <form>
             <div className="form-group row">
@@ -88,7 +196,8 @@ function UserInfoEdit(props) {
                 <label className="col-sm-2 col-form-label">Username</label>
 
                 <div className="col-sm-10">
-                    <input type="text" name="username" className="form-control is-valid" value={props.profile.username ? props.profile.username : ""} onChange={props.changed} />
+                    <input type="text" name="username" className={getClassNames(arrangedErrors, "username")} value={props.profile.username ? props.profile.username : ""} onChange={props.changed} />
+                    {showFeedback(arrangedErrors, "username")}
                 </div>
             </div>
 
@@ -96,7 +205,8 @@ function UserInfoEdit(props) {
                 <label className="col-sm-2 col-form-label">First Name</label>
 
                 <div className="col-sm-10">
-                    <input type="text" name="first_name" className="form-control" value={props.profile.first_name ? props.profile.first_name : ""} onChange={props.changed} />
+                    <input type="text" name="first_name" className={getClassNames(arrangedErrors, "first_name")} value={props.profile.first_name ? props.profile.first_name : ""} onChange={props.changed} />
+                    {showFeedback(arrangedErrors, "first_name")}
                 </div>
             </div>
 
@@ -104,7 +214,8 @@ function UserInfoEdit(props) {
                 <label className="col-sm-2 col-form-label">Last Name</label>
 
                 <div className="col-sm-10">
-                    <input type="text" name="last_name" className="form-control" value={props.profile.last_name ? props.profile.last_name : ""} onChange={props.changed} />
+                    <input type="text" name="last_name" className={getClassNames(arrangedErrors, "last_name")} value={props.profile.last_name ? props.profile.last_name : ""} onChange={props.changed} />
+                    {showFeedback(arrangedErrors, "last_name")}
                 </div>
             </div>
 
@@ -112,7 +223,8 @@ function UserInfoEdit(props) {
                 <label className="col-sm-2 col-form-label">Facebook</label>
 
                 <div className="col-sm-10">
-                    <input type="text" name="facebook" className="form-control" value={props.socialLinks.facebook.username ? props.socialLinks.facebook.username : ""} onChange={props.changed} />
+                    <input type="text" name="facebook" className={getClassNames(arrangedErrors, "facebook")} value={props.socialLinks.facebook.username ? props.socialLinks.facebook.username : ""} onChange={props.changed} />
+                    {showFeedback(arrangedErrors, "facebook")}
                 </div>
             </div>
 
@@ -120,7 +232,8 @@ function UserInfoEdit(props) {
                 <label className="col-sm-2 col-form-label">Instagram</label>
 
                 <div className="col-sm-10">
-                    <input type="text" name="instagram" className="form-control" value={props.socialLinks.instagram.username ? props.socialLinks.instagram.username : ""} onChange={props.changed} />
+                    <input type="text" name="instagram" className={getClassNames(arrangedErrors, "instagram")} value={props.socialLinks.instagram.username ? props.socialLinks.instagram.username : ""} onChange={props.changed} />
+                    {showFeedback(arrangedErrors, "instagram")}
                 </div>
             </div>
 
@@ -128,7 +241,8 @@ function UserInfoEdit(props) {
                 <label className="col-sm-2 col-form-label">Twitter</label>
 
                 <div className="col-sm-10">
-                    <input type="text" name="twitter" className="form-control" value={props.socialLinks.twitter.username ? props.socialLinks.twitter.username : ""} onChange={props.changed} />
+                    <input type="text" name="twitter" className={getClassNames(arrangedErrors, "twitter")} value={props.socialLinks.twitter.username ? props.socialLinks.twitter.username : ""} onChange={props.changed} />
+                    {showFeedback(arrangedErrors, "twitter")}
                 </div>
             </div>
 
