@@ -9,6 +9,8 @@ import EmploymentContext from "./context/EmploymentContext";
 class ProfileEditContainer extends React.Component {
     // token
     // x40lXKPnFndNNuQqOjRIIi97zCIPl3UGQlER0Cvh2MdN13ISF62pJQrtrK6Kgmno9fUuf3eC9ZQJlKob
+    // sSMw7Olnkn0txfS66POsxlRdliiCh7T7tkZnF8SIDI8QQadFJATnOke7DiaLsRqEeEwmme3NonEpQXD8
+    static token = "sSMw7Olnkn0txfS66POsxlRdliiCh7T7tkZnF8SIDI8QQadFJATnOke7DiaLsRqEeEwmme3NonEpQXD8";
 
     static contextType = EmploymentContext;
 
@@ -110,7 +112,7 @@ class ProfileEditContainer extends React.Component {
         console.log("this.state.isEmploymentUpdating now set ==> " + this.state.isEmploymentUpdating);
 
         let self = this;
-        let token = "x40lXKPnFndNNuQqOjRIIi97zCIPl3UGQlER0Cvh2MdN13ISF62pJQrtrK6Kgmno9fUuf3eC9ZQJlKob";
+        let token = ProfileEditContainer.token;
         // let url = "http://myg.test:8000/api/profile/update";
         let url = "http://myg.test:8000/api/employment/update?api_token=" + token;
 
@@ -153,7 +155,7 @@ class ProfileEditContainer extends React.Component {
     handleProfilePhotoChanged() {
         const self = this;
 
-        let token = "x40lXKPnFndNNuQqOjRIIi97zCIPl3UGQlER0Cvh2MdN13ISF62pJQrtrK6Kgmno9fUuf3eC9ZQJlKob";
+        let token = ProfileEditContainer.token;
         let url = "http://myg.test:8000/api/profile/uploadPhoto?api_token=" + token;
         // let url = "http://myg.test:8000/api/profile-photo";
 
@@ -228,7 +230,7 @@ class ProfileEditContainer extends React.Component {
         console.log("this.state.isUserInfoUpdating now set ==> " + this.state.isUserInfoUpdating);
 
         let self = this;
-        let token = "x40lXKPnFndNNuQqOjRIIi97zCIPl3UGQlER0Cvh2MdN13ISF62pJQrtrK6Kgmno9fUuf3eC9ZQJlKob";
+        let token = ProfileEditContainer.token;
         // let url = "http://myg.test:8000/api/profile/update";
         let url = "http://myg.test:8000/api/profile/updateUserInfo?api_token=" + token;
 
@@ -507,7 +509,7 @@ class ProfileEditContainer extends React.Component {
     componentDidMount() {
         this.setMyContext();
 
-        let token = "x40lXKPnFndNNuQqOjRIIi97zCIPl3UGQlER0Cvh2MdN13ISF62pJQrtrK6Kgmno9fUuf3eC9ZQJlKob";
+        let token = ProfileEditContainer.token;
         let url = "http://myg.test:8000/api/user?api_token=" + token;
         // let url = "http://myg.test:8000/api/fucker?api_token=" + token;
         // let url = "http://myg.test:8000/api/fucker";
