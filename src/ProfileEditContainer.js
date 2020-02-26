@@ -29,7 +29,9 @@ class ProfileEditContainer extends React.Component {
             },
             employments: [],
             isUserInfoUpdating: false,
+            isEmploymentUpdating: false,
             userInfoErrors: [],
+            employmentErrors: [],
             profilePhotoErrors: []
         };
         this.appUrl = "http://myg.test:8000";
@@ -43,7 +45,110 @@ class ProfileEditContainer extends React.Component {
         this.handleUserInfoSaved = this.handleUserInfoSaved.bind(this);
         this.handleProfilePhotoChanged = this.handleProfilePhotoChanged.bind(this);
         // this.handleProfilePhotoSaved = this.handleProfilePhotoSaved.bind(this);
+        this.handleEmploymentSaved = this.handleEmploymentSaved.bind(this);
     }
+
+
+    displayErrors(error) {
+        
+        console.log("\n\n\n#########################");
+        console.log("in method:: displayErrors()");
+        console.log("error ==> " + error);
+        console.log("looping through object:: error...");
+        
+
+        for (const property in error) {
+            console.log(`${property}: ${error[property]}`);
+        }
+
+        try {
+            console.log(error.response);
+        } catch (e) {
+            console.log("error bruh ==> " + e);
+        }
+
+        try {
+            console.log(error.response.data.message);
+        } catch (e) {
+            console.log("error bruh ==> " + e);
+        }
+
+        try {
+            console.log(error.response.data.errors);
+        } catch (e) {
+            console.log("error bruh ==> " + e);
+        }
+    }
+
+
+    displayObjects(obj, objName) {
+        
+        console.log("\n\n\n#########################");
+        console.log("in method:: displayObjects()");
+        console.log("obj ==> " + objName);
+        console.log(obj);
+        console.log("looping through object:: " + objName);
+        
+
+        for (const property in obj) {
+            console.log(`${property}: ${obj[property]}`);
+        }
+    }
+
+
+    handleEmploymentSaved() {
+
+        if (this.state.isEmploymentUpdating) {
+            console.log("\nemployment is still updating");
+            return;
+        }
+        console.log("\nhandleEmploymentSaved()");
+
+        this.setState((prevState, props) => {
+            return { isEmploymentUpdating: true };
+        });
+        console.log("this.state.isEmploymentUpdating now set ==> " + this.state.isEmploymentUpdating);
+
+        let self = this;
+        let token = "x40lXKPnFndNNuQqOjRIIi97zCIPl3UGQlER0Cvh2MdN13ISF62pJQrtrK6Kgmno9fUuf3eC9ZQJlKob";
+        // let url = "http://myg.test:8000/api/profile/update";
+        let url = "http://myg.test:8000/api/employment/update?api_token=" + token;
+
+        axios
+            .post(url, {
+                employments: this.state.employments
+            })
+            .then(function (response) {
+                self.displayObjects(response, "response");
+                self.displayObjects(response.data, "response.data");
+                self.displayObjects(response.data.validatedData, "response.data.validatedData");
+
+                if (response.data.result === 1) {
+                    self.setState({ employmentErrors: [] });
+                }
+            })
+            .catch(function (error) {
+                self.displayErrors(error);
+
+                try {
+                    self.setState({ employmentErrors: error.response.data.errors });
+                } catch (error) {
+                    console.log("error ==> " + error);
+                }
+                
+            })
+            .then(function () {
+                console.log("\nalways executed");
+                self.setState((prevState, props) => {
+                    return { isEmploymentUpdating: false };
+                });
+                console.log("this.state.isEmploymentUpdating now reset ==> " + self.state.isEmploymentUpdating);
+            });
+
+    }
+
+
+
 
     handleProfilePhotoChanged() {
         const self = this;
@@ -61,7 +166,7 @@ class ProfileEditContainer extends React.Component {
                     "Content-Type": "multipart/form-data"
                 }
             })
-            .then(function(response) {
+            .then(function (response) {
                 console.log(response);
                 console.log("\n\n\nlooping through object:: response...");
                 for (const property in response) {
@@ -82,7 +187,7 @@ class ProfileEditContainer extends React.Component {
                     console.log("error bruh ==> " + e);
                 }
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log(error);
                 console.log("\n\n\nlooping through object:: error...");
                 for (const property in error) {
@@ -134,7 +239,7 @@ class ProfileEditContainer extends React.Component {
                 ...this.state.profile,
                 ...this.state.socialLinks
             })
-            .then(function(response) {
+            .then(function (response) {
                 console.log(response);
                 console.log("\n\n\nlooping through object:: response...");
                 for (const property in response) {
@@ -145,7 +250,7 @@ class ProfileEditContainer extends React.Component {
                     self.setState({ userInfoErrors: [] });
                 }
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log(error);
                 console.log("\n\n\nlooping through object:: error...");
                 for (const property in error) {
@@ -157,7 +262,7 @@ class ProfileEditContainer extends React.Component {
 
                 self.setState({ userInfoErrors: error.response.data.errors });
             })
-            .then(function() {
+            .then(function () {
                 // always executed
                 console.log("\nalways executed");
                 // self.setState({ isUserInfoUpdating: false });
@@ -379,23 +484,19 @@ class ProfileEditContainer extends React.Component {
                                     changed={this.handleChange}
                                     userInfoSaved={this.handleUserInfoSaved}
                                     errors={this.state.userInfoErrors}
-                                    profilePhotoChanged={this.handleProfilePhotoChanged}
-                                />
+                                    profilePhotoChanged={this.handleProfilePhotoChanged} />
                             </div>
                             <div className="tab-pane" id="employmentEdit" role="tabpanel">
                                 <EmploymentEdit
                                     employments={this.state.employments}
+                                    employmentErrors={this.state.employmentErrors}
                                     changed={this.handleEmploymentChanged}
                                     addEmploymentItemClicked={this.handleAddEmploymentItemClicked}
                                     addEmploymentDescriptionClicked={this.handleAddEmploymentDescriptionClicked}
-                                />
+                                    employmentSaved={this.handleEmploymentSaved} />
                             </div>
-                            <div className="tab-pane" id="messages" role="tabpanel">
-                                zzz
-                            </div>
-                            <div className="tab-pane" id="settings" role="tabpanel">
-                                xxx
-                            </div>
+                            <div className="tab-pane" id="messages" role="tabpanel">zzz</div>
+                            <div className="tab-pane" id="settings" role="tabpanel">xxx</div>
                         </div>
                     </div>
                 </div>
@@ -417,7 +518,7 @@ class ProfileEditContainer extends React.Component {
             method: "get",
             url: url
         })
-            .then(function(response) {
+            .then(function (response) {
                 // handle success
                 console.log("response ==> " + response);
                 console.log("response.data ==> " + response.data);
@@ -426,6 +527,7 @@ class ProfileEditContainer extends React.Component {
                 for (const property in response) {
                     console.log(`${property}: ${response[property]}`);
                 }
+
 
                 const data = response.data.data;
                 console.log("\n\n\nlooping through object:: data...");
@@ -453,11 +555,11 @@ class ProfileEditContainer extends React.Component {
                 // self.setState({ relationship: newRelationshipState });
                 self.fillComponent(data);
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 // handle error
                 console.log(error);
             })
-            .then(function() {
+            .then(function () {
                 // always executed
                 console.log("done axiosing");
             });

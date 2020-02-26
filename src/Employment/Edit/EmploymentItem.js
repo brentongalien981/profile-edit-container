@@ -1,6 +1,53 @@
 import React from "react";
 import EmploymentItemDescription from "./EmploymentItemDescription";
 
+
+
+function getClassNames(props, field) {
+    let classNames = ["form-control"];
+
+    try {
+        if (props.errors[field].length > 0) { classNames.push("is-invalid"); }
+    } catch (error) {
+        console.log("\nerror bruh ==> " + error);
+    }
+
+    return classNames.join(' ');
+
+}
+
+
+
+function showFeedback(props, field) {
+    let feedback = null;
+
+
+    try {
+        feedback = <div className="invalid-feedback">{props.errors[field]}</div>;
+    } catch (error) {
+        console.log("\nerror bruh ==> " + error);
+    }
+
+    return feedback;
+
+}
+
+
+
+function getDescriptionErrors(props, index) {
+    let errors = null;
+
+    try {
+        errors = props.errors.descriptions[index];
+    } catch (error) {
+        console.log("\nerror bruh ==> " + error);
+    }
+
+    return errors;
+}
+
+
+
 function EmploymentItem(props) {
     // Set dates.
     let startDate = "2000-01-01";
@@ -22,7 +69,7 @@ function EmploymentItem(props) {
     }
 
     const descriptions = props.employment.descriptions.map((description, index) => {
-        return <EmploymentItemDescription key={description.id} index={index} employmentIndex={props.index} description={description.description} />;
+        return <EmploymentItemDescription key={description.id} index={index} employmentIndex={props.index} description={description.description} errors={getDescriptionErrors(props, index)} />;
     });
 
     return (
@@ -34,10 +81,11 @@ function EmploymentItem(props) {
                     <input
                         type="text"
                         name="employer"
-                        className="form-control"
+                        className={getClassNames(props, "employer")}
                         value={props.employment.employer ? props.employment.employer : ""}
                         onChange={event => props.changed(event, props.index, props.employment.id)}
                     />
+                    {showFeedback(props, "employer")}
                 </div>
             </div>
 
@@ -48,10 +96,11 @@ function EmploymentItem(props) {
                     <input
                         type="text"
                         name="position"
-                        className="form-control"
+                        className={getClassNames(props, "position")}
                         value={props.employment.position ? props.employment.position : ""}
                         onChange={event => props.changed(event, props.index, props.employment.id)}
                     />
+                    {showFeedback(props, "position")}
                 </div>
             </div>
 
@@ -59,7 +108,8 @@ function EmploymentItem(props) {
                 <label className="col-sm-2 col-form-label">Start Date</label>
 
                 <div className="col-sm-10">
-                    <input type="date" name="start_date" className="form-control" value={startDate ? startDate : ""} onChange={event => props.changed(event, props.index, props.employment.id)} />
+                    <input type="date" name="start_date" className={getClassNames(props, "start_date")} value={startDate ? startDate : ""} onChange={event => props.changed(event, props.index, props.employment.id)} />
+                    {showFeedback(props, "start_date")}
                 </div>
             </div>
 
@@ -67,7 +117,8 @@ function EmploymentItem(props) {
                 <label className="col-sm-2 col-form-label">End Date</label>
 
                 <div className="col-sm-10">
-                    <input type="date" name="end_date" className="form-control" value={endDate ? endDate : ""} onChange={event => props.changed(event, props.index, props.employment.id)} />
+                    <input type="date" name="end_date" className={getClassNames(props, "end_date")} value={endDate ? endDate : ""} onChange={event => props.changed(event, props.index, props.employment.id)} />
+                    {showFeedback(props, "end_date")}
                 </div>
             </div>
 
