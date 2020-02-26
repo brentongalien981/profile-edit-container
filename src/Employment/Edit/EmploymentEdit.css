@@ -1,0 +1,9 @@
+#actionButtonsHolder {
+    margin: 0;
+    margin-bottom: 30px;
+}
+
+#saveEmploymentBtn,
+#addEmploymentItemBtn {
+    box-shadow: 0 0 10px #ddd;
+}

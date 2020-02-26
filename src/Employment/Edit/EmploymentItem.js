@@ -1,5 +1,6 @@
 import React from "react";
 import EmploymentItemDescription from "./EmploymentItemDescription";
+import "./EmploymentItem.css";
 
 
 
@@ -73,7 +74,7 @@ function EmploymentItem(props) {
     });
 
     return (
-        <form>
+        <form className="EmploymentItem">
             <div className="form-group row">
                 <label className="col-sm-2 col-form-label">Company</label>
 

@@ -52,7 +52,7 @@ function EmploymentItemDescription(props) {
             <label className="col-sm-2 col-form-label">Detail</label>
 
             <div className="col-sm-10">
-                <textarea className={getClassNames(props)} value={props.description} onChange={(event) => employmentContext.employmentDescriptionChanged(event, props.employmentIndex, props.index)} />
+                <textarea className={getClassNames(props)} value={props.description != null ? props.description : ""} onChange={(event) => employmentContext.employmentDescriptionChanged(event, props.employmentIndex, props.index)} />
                 {showFeedback(props.errors)}
             </div>
         </div>

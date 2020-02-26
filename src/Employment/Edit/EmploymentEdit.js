@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import $ from "jquery";
 import EmploymentItem from "./EmploymentItem";
+import "./EmploymentEdit.css";
 
 
 
@@ -89,21 +90,16 @@ function EmploymentEdit(props) {
     });
 
     return (
-        <div>
-            <div>
-                <button type="button" className="btn btn-success" onClick={props.addEmploymentItemClicked}>
+        <div className="EmploymentEdit">
+            <div id="actionButtonsHolder" className="row justify-content-between">
+                <button id="saveEmploymentBtn" type="button" className="btn btn-primary" onClick={props.employmentSaved}>Save Employments</button>
+
+                <button id="addEmploymentItemBtn" type="button" className="btn btn-success" onClick={props.addEmploymentItemClicked}>
                     <i className="fa fa-plus-square"></i> Add Employment
                 </button>
             </div>
             {employments}
 
-            <div className="row">
-                <div className="col-sm-10">
-                    <button type="button" className="btn btn-primary" onClick={props.employmentSaved}>
-                        Save
-                    </button>
-                </div>
-            </div>
         </div>
     );
 }

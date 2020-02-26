@@ -1,4 +1,5 @@
 import React from "react";
+import './UserInfoEdit.css';
 
 
 
@@ -105,7 +106,7 @@ function showFeedback(errors, field) {
 function getProfilePhotoInput(props) {
     //
     let profilePhotoInput = {
-        classNames: ["custom-file-input"],
+        classNames: ["custom-file-input", "form-control", "form-control-sm"],
         statusFeedback: null
     };
 
@@ -121,10 +122,8 @@ function getProfilePhotoInput(props) {
     return profilePhotoInput;
 }
 
-function UserInfoEdit(props) {
-    //
-    const profilePhotoInput = getProfilePhotoInput(props);
 
+function setFormErrors(props) {
     let formErrors = [];
 
     //
@@ -163,7 +162,17 @@ function UserInfoEdit(props) {
             </div>
         );
     }
+}
 
+
+
+function UserInfoEdit(props) {
+
+    //
+    // setFormErrors(props);
+
+    //
+    const profilePhotoInput = getProfilePhotoInput(props);
 
     //
     let arrangedErrors = getArrangedErrors(props.errors);
@@ -171,12 +180,12 @@ function UserInfoEdit(props) {
 
     //
     return (
-        <form>
+        <form className="UserInfoEdit">
             <div className="form-group row">
                 <label className="col-sm-2 col-form-label">Photo</label>
 
-                <div className="col-sm-10">
-                    <img src={props.photoUrl} alt="profile-photo" width="200px" />
+                <div className="col-sm-8">
+                    <img src={props.photoUrl} alt="profile-photo" width="100%" className="img-fluid rounded float-left" />
                     <div className="custom-file">
                         <input
                             type="file"
@@ -246,11 +255,10 @@ function UserInfoEdit(props) {
                 </div>
             </div>
 
-            {formErrorsHolder}
-
             <div className="form-group row">
+                <label className="col-sm-2 col-form-label"></label>
                 <div className="col-sm-10">
-                    <button type="button" className="btn btn-primary" onClick={props.userInfoSaved}>
+                    <button id="saveBtn" type="button" className="btn btn-primary" onClick={props.userInfoSaved}>
                         Save
                     </button>
                 </div>

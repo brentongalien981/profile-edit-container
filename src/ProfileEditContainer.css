@@ -1,3 +1,9 @@
+.ProfileEditContainer {
+    min-width: 640px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
 #optionsHolder {
     height: 300px;
 }
@@ -8,4 +14,5 @@
 
 .invalid-feedback, .valid-feedback {
     display: block;
+    text-align: left;
 }

@@ -1,0 +1,29 @@
+.EmploymentItem {
+    /* border: 1px solid #DDD; */
+    box-shadow: 0 0 10px #ddd;
+    border-radius: 5px;
+    margin-bottom: 50px;
+    padding: 40px;
+    padding-top: 60px;    
+}
+
+.EmploymentItem * {
+    font-size: 0.8rem;
+}
+
+
+.EmploymentItem .col-form-label {
+    text-align: right;
+}
+
+.EmploymentItem button {
+    display: block;
+}
+
+
+
+@media only screen and (max-width: 775px) {
+    .EmploymentItem .col-form-label {
+        text-align: left;
+    }
+}

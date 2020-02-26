@@ -469,13 +469,12 @@ class ProfileEditContainer extends React.Component {
     render() {
         return (
             <div className="ProfileEditContainer container">
-                <h1 id="shit">ProfileEditContainer bitch!</h1>
 
                 <div className="row">
-                    <div className="col-4">
+                    <div className="col-3">
                         <Options />
                     </div>
-                    <div className="col-8 bg-warning">
+                    <div className="col-9">
                         <div className="tab-content" id="profileDetailsHolder">
                             <div className="tab-pane active" id="userInfoEdit" role="tabpanel">
                                 <UserInfoEdit
@@ -497,8 +496,7 @@ class ProfileEditContainer extends React.Component {
                                     addEmploymentDescriptionClicked={this.handleAddEmploymentDescriptionClicked}
                                     employmentSaved={this.handleEmploymentSaved} />
                             </div>
-                            <div className="tab-pane" id="messages" role="tabpanel">zzz</div>
-                            <div className="tab-pane" id="settings" role="tabpanel">xxx</div>
+                            <div className="tab-pane" id="messages" role="tabpanel">TODO</div>
                         </div>
                     </div>
                 </div>
