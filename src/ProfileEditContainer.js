@@ -11,6 +11,7 @@ class ProfileEditContainer extends React.Component {
     // x40lXKPnFndNNuQqOjRIIi97zCIPl3UGQlER0Cvh2MdN13ISF62pJQrtrK6Kgmno9fUuf3eC9ZQJlKob
     // sSMw7Olnkn0txfS66POsxlRdliiCh7T7tkZnF8SIDI8QQadFJATnOke7DiaLsRqEeEwmme3NonEpQXD8
     static token = "sSMw7Olnkn0txfS66POsxlRdliiCh7T7tkZnF8SIDI8QQadFJATnOke7DiaLsRqEeEwmme3NonEpQXD8";
+    static appUrl = "http://myg.test:8000";
 
     static contextType = EmploymentContext;
 
@@ -511,6 +512,11 @@ class ProfileEditContainer extends React.Component {
         let url = "http://myg.test:8000/api/user?api_token=" + token;
         // let url = "http://myg.test:8000/api/fucker?api_token=" + token;
         // let url = "http://myg.test:8000/api/fucker";
+        // const username = document.getElementById("username");
+        
+        // let url = ProfileEditContainer.appUrl + "/api/" + username;
+        // const username = "kobe";
+        // let url = ProfileEditContainer.appUrl + "/" + username + "/edit-values";
 
         let self = this;
 
@@ -552,6 +558,8 @@ class ProfileEditContainer extends React.Component {
                     }
                 }
 
+                self.displayObjects(data.theRequest, "data.theRequest");
+                self.displayObjects(data.this, "data.this");
                 // self.setState({ relationship: newRelationshipState });
                 self.fillComponent(data);
             })
